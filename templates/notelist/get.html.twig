@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List all Notes{% endblock %}
+
+{% block body %}
+    <h4>
+        <a href="{{ path('notelist_get', {'categoryId': note.category_id, 'noteId': note.id}) }}">
+            {{ note.title }}
+        </a>
+    </h4>
+    <p>{{ note.text }}</p>
+{% endblock %}
