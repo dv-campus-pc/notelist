@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>
+            {% block title %}
+                Welcome!
+            {% endblock %}
+        </title>
         {# Run `composer require symfony/webpack-encore-bundle`
            and uncomment the following Encore helpers to start using Symfony UX #}
         {% block stylesheets %}
@@ -14,6 +18,15 @@
         {% endblock %}
     </head>
     <body>
+        <section class="header">
+            <ul class="menu">
+                <li>
+                    <a href="{{ path('notelist_list_by_category', {'categoryId': 1}) }}">My Summer weekends</a>
+                    <a href="{{ path('notelist_list_by_category', {'categoryId': 2}) }}">My favorite books review</a>
+                    <a href="{{ path('notelist_list_by_category', {'categoryId': 3}) }}">My friends hobbies</a>
+                </li>
+            </ul>
+        </section>
         {% block body %}{% endblock %}
     </body>
 </html>
