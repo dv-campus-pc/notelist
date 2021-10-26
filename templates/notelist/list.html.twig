@@ -7,11 +7,11 @@
     {% for note in notes %}
         <li>
             <h4>
-                <a href="{{ path('notelist_get', {'categoryId': note.category_id, 'noteId': note.id}) }}">
-                    {{ note.title }}
-                </a>
+{#                <a href="{{ path('notelist_get', {'categoryId': note.category_id, 'noteId': note.id}) }}">#}
+{#                    {{ note.title }}#}
+{#                </a>#}
             </h4>
-            <p>{{ note.text }}</p>
+            <p>{{ note.id }} {{ note.title }} {{ note.text }}</p>
         </li>
     {% endfor %}
     </ul>
