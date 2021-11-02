@@ -25,7 +25,7 @@ class NotelistController extends AbstractController
         ],
         3 => [
             'title' => 'My friends hobbies',
-            'notes' => [7, 8, 9]
+            'notes' => [7, 8, 9, 10]
         ]
     ];
 
@@ -83,7 +83,13 @@ class NotelistController extends AbstractController
             'title' => 'Some note 9',
             'text' => 'Lorem ipsun 9',
             'category_id' => 3
-        ]
+        ],
+        10 => [
+            'id' => 10,
+            'title' => 'Some note 10',
+            'text' => 'Lorem ipsun 10',
+            'category_id' => 3
+        ],
     ];
 
     /**
