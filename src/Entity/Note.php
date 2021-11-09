@@ -22,14 +22,27 @@ class Note
      *
      * @ORM\Column(type="string", length=100)
      */
-    private $title;
+    private string $title;
 
     /**
      * @var string
      *
      * @ORM\Column(type="text")
      */
-    private $text;
+    private string $text;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="notes")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private Category $category;
+
+    public function __construct(string $title, string $text, Category $category)
+    {
+        $this->title = $title;
+        $this->text = $text;
+        $this->category = $category;
+    }
 
     public function getId(): ?int
     {
@@ -56,6 +69,18 @@ class Note
     public function setText(string $text): self
     {
         $this->text = $text;
+        return $this;
+    }
+
+    public function getCategory(): Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): self
+    {
+        $this->category = $category;
+
         return $this;
     }
 }
