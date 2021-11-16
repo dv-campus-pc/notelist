@@ -23,16 +23,19 @@ class NotelistController extends AbstractController
         $this->noteRepository = $noteRepository;
     }
 
-    private array $categories = [
+    public static array $categories = [
         1 => [
+            'id' => 1,
             'title' => 'My Summer weekends',
             'notes' => [1, 2, 3]
         ],
         2 => [
+            'id' => 2,
             'title' => 'My favorite books review',
             'notes' => [4, 5, 6]
         ],
         3 => [
+            'id' => 3,
             'title' => 'My friends hobbies',
             'notes' => [7, 8, 9]
         ]
@@ -110,11 +113,11 @@ class NotelistController extends AbstractController
      */
     public function listByCategory(string $categoryId): Response
     {
-        if (!isset($this->categories[(int) $categoryId])) {
+        if (!isset(self::$categories[(int) $categoryId])) {
             throw new Exception('You ask for category that not exists');
         }
 
-        $category = $this->categories[(int) $categoryId] ?? null;
+        $category = self::$categories[(int) $categoryId] ?? null;
         $notesIds = $category['notes'];
 
         $notes = array_filter($this->notes, function (array $note) use ($notesIds) {
@@ -131,11 +134,11 @@ class NotelistController extends AbstractController
      */
     public function getAction(string $categoryId, string $noteId): Response
     {
-        if (!isset($this->categories[(int) $categoryId])) {
+        if (!isset(self::$categories[(int) $categoryId])) {
             throw new Exception('You ask for category that not exists');
         }
 
-        $category = $this->categories[(int) $categoryId] ?? null;
+        $category = self::$categories[(int) $categoryId] ?? null;
         $notesIds = $category['notes'];
 
         $notes = array_filter($this->notes, function (array $note) use ($notesIds) {
