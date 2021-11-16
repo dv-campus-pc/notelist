@@ -8,5 +8,10 @@
         <div class="card-body">
             <p class="card-text">{{ note.text }}</p>
         </div>
+        <div class="card-header">
+            <a class="btn btn-outline-danger float-end" href="{{ path('notelist_delete', {'id': note.id}) }}" role="button">
+                Delete
+            </a>
+        </div>
     </div>
 {% endblock %}

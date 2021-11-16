@@ -9,6 +9,7 @@ use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -84,17 +85,20 @@ class NotelistController extends AbstractController
     }
 
     /**
-     * @Route("/delete_note/{id}", name="create")
+     * @Route("/delete/{id}", name="delete")
      */
-    public function deleteAction(int $id): Response
+    public function deleteAction(int $id, EntityManagerInterface $entityManager): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
         $noteToDelete = $this->noteRepository->find($id);
+        if (!$noteToDelete) {
+            throw new NotFoundHttpException('Note not found');
+        }
+
         $entityManager->remove($noteToDelete);
         $entityManager->flush();
 
-        return $this->render('notelist/delete_note.html.twig', [
-            'id' => $id,
-        ]);
+        $this->addFlash('success', sprintf('Note "%s" was deleted', $noteToDelete->getTitle()));
+
+        return $this->redirectToRoute('notelist_list_all');
     }
 }
