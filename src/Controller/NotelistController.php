@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Note;
 use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -64,24 +66,35 @@ class NotelistController extends AbstractController
     }
 
     /**
-     * @Route("/create", name="create")
+     * @Route("/create", name="create", methods={"GET", "POST"})
      */
-    public function createAction(): Response
+    public function createAction(Request $request, EntityManagerInterface $em): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $newNote = new Note();
-        $newNote
-            ->setTitle('New note title')
-            ->setText('New note text');
+        if ($request->getMethod() === 'GET') {
+            $categories = $em->getRepository(Category::class)->findAll();
 
-        $entityManager->persist($newNote);
-        $entityManager->flush();
+            return $this->render('notelist/create.html.twig', [
+                'categories' => $categories
+            ]);
+        }
 
-        $notes = $this->noteRepository->findAll();
+        // TODO: add data validation
+        $title = (string) $request->request->get('title');
+        $text = (string) $request->request->get('text');
 
-        return $this->render('notelist/list.html.twig', [
-            'notes' => $notes,
-        ]);
+        $categoryId = (int) $request->request->get('category_id');
+        $category = $em->getRepository(Category::class)->find($categoryId);
+        if (!$category) {
+            throw new NotFoundHttpException('Category not found');
+        }
+
+        $note = new Note($title, $text, $category);
+        $em->persist($note);
+        $em->flush();
+
+        $this->addFlash('success', sprintf('Note "%s" was created', $note->getTitle()));
+
+        return $this->redirectToRoute('notelist_create');
     }
 
     /**

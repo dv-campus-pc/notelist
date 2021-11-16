@@ -29,7 +29,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ path('page_home') }}">Home</a>
+                        <a class="nav-link" aria-current="page" href="{{ path('page_home') }}">Home</a>
                     </li>
 
                     <li class="nav-item dropdown">
@@ -45,6 +45,10 @@
                                 </li>
                             {% endfor %}
                         </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ path('notelist_create') }}">Add new notelist</a>
                     </li>
                 </ul>
             </div>
