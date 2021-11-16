@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 namespace App\Twig;
 
-use App\Controller\NotelistController;
+use App\Entity\Category;
+use Doctrine\ORM\EntityManagerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 class TemplateExtension extends AbstractExtension
 {
+    private EntityManagerInterface $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     public function getFunctions(): array
     {
         return [
@@ -19,6 +27,6 @@ class TemplateExtension extends AbstractExtension
 
     public function getCategories(): array
     {
-        return NotelistController::$categories;
+        return $this->em->getRepository(Category::class)->findAll();
     }
 }
