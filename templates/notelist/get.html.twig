@@ -3,10 +3,10 @@
 {% block title %}List all Notes{% endblock %}
 
 {% block body %}
-    <h4>
-        <a href="{{ path('notelist_get', {'categoryId': note.category_id, 'noteId': note.id}) }}">
-            {{ note.title }}
-        </a>
-    </h4>
-    <p>{{ note.text }}</p>
+    <div class="card">
+        <h5 class="card-header">{{ note.title }}</h5>
+        <div class="card-body">
+            <p class="card-text">{{ note.text }}</p>
+        </div>
+    </div>
 {% endblock %}

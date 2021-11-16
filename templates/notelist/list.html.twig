@@ -3,16 +3,15 @@
 {% block title %}List all Notes{% endblock %}
 
 {% block body %}
-    <ul>
     {% for note in notes %}
-        <li>
-            <h4>
-{#                <a href="{{ path('notelist_get', {'categoryId': note.category_id, 'noteId': note.id}) }}">#}
-{#                    {{ note.title }}#}
-{#                </a>#}
-            </h4>
-            <p>{{ note.id }} {{ note.title }} {{ note.text }}</p>
-        </li>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ note.title }}</h5>
+                <p class="card-text">{{ note.text }}</p>
+                <a href="{{ path('notelist_get', {'noteId': note.id, 'categoryId': note.category_id}) }}" class="btn btn-primary">
+                    Read
+                </a>
+            </div>
+        </div>
     {% endfor %}
-    </ul>
 {% endblock %}
