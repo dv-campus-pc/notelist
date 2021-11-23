@@ -31,10 +31,14 @@
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{{ path('page_home') }}">Home</a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{{ path('notelist_create') }}">Add new notelist</a>
                     </li>
+                    {% if app.user %}
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{{ path('user_logout') }}">Logout</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -59,17 +63,32 @@
                 {% block body %}{% endblock %}
             </div>
             <div class="col-3 mt-3">
-                <div class="card w-100 mb-3">
-                    <div class="card-header">
-                        <b>Registration</b>
+                {% if not app.user %}
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Login</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Registration</button>
+                    </li>
+                </ul>
+                <div class="tab-content card border-top-0 rounded-0 mb-3" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <form action="{{ path('user_login') }}" method="POST" class="p-3">
+                            <input name="_username" type="text" class="form-control mb-2" placeholder="Username" required>
+                            <input name="_password" type="password" class="form-control mb-2" placeholder="Password" required>
+                            <button type="submit" class="form-control mb-2" aria-label="Last name">Login</button>
+                        </form>
                     </div>
-
-                    <form action="{{ path('user_registration') }}" method="POST" class="p-3">
-                        <input name="username" type="text" class="form-control mb-2" placeholder="Username" required>
-                        <input name="password" type="password" class="form-control mb-2" placeholder="Password" required>
-                        <button type="submit" class="form-control mb-2" aria-label="Last name">Register</button>
-                    </form>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <form action="{{ path('user_registration') }}" method="POST" class="p-3">
+                            <input name="username" type="text" class="form-control mb-2" placeholder="Username" required>
+                            <input name="password" type="password" class="form-control mb-2" placeholder="Password" required>
+                            <button type="submit" class="form-control mb-2" aria-label="Last name">Register</button>
+                        </form>
+                    </div>
                 </div>
+                {% endif %}
 
                 <div class="card w-100">
                     <div class="card-header">
