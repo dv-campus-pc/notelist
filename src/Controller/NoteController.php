@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/notelist", name="notelist_")
  */
-class NotelistController extends AbstractController
+class NoteController extends AbstractController
 {
     private NoteRepository $noteRepository;
 
