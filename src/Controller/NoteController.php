@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Note;
+use App\Enum\FlashMessagesEnum;
 use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -92,7 +93,7 @@ class NoteController extends AbstractController
         $em->persist($note);
         $em->flush();
 
-        $this->addFlash('success', sprintf('Note "%s" was created', $note->getTitle()));
+        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was created', $note->getTitle()));
 
         return $this->redirectToRoute('notelist_create');
     }
@@ -110,7 +111,7 @@ class NoteController extends AbstractController
         $entityManager->remove($noteToDelete);
         $entityManager->flush();
 
-        $this->addFlash('success', sprintf('Note "%s" was deleted', $noteToDelete->getTitle()));
+        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was deleted', $noteToDelete->getTitle()));
 
         return $this->redirectToRoute('notelist_list_all');
     }
