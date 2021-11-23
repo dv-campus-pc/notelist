@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/category", name="category_")
@@ -21,14 +23,24 @@ class CategoryController extends AbstractController
     /**
      * @Route(name="add", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $em): Response
+    public function create(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): Response
     {
         $name = $request->request->get('name');
 
-        $em->persist(new Category($name));
-        $em->flush();
+        $category = new Category($name);
 
-        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Category %s was created', $name));
+        /** @var ConstraintViolationList $errors */
+        $errors = $validator->validate($category);
+        foreach ($errors as $error) {
+            $this->addFlash(FlashMessagesEnum::FAIL, $error->getMessage());
+        }
+
+        if (!$errors->count()) {
+            $em->persist($category);
+            $em->flush();
+
+            $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Category %s was created', $name));
+        }
 
         return $this->redirectToRoute('page_home');
     }

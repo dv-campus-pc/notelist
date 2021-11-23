@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/notelist", name="notelist_")
@@ -69,7 +71,7 @@ class NoteController extends AbstractController
     /**
      * @Route("/create", name="create", methods={"GET", "POST"})
      */
-    public function createAction(Request $request, EntityManagerInterface $em): Response
+    public function createAction(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): Response
     {
         if ($request->getMethod() === 'GET') {
             $categories = $em->getRepository(Category::class)->findAll();
@@ -79,7 +81,6 @@ class NoteController extends AbstractController
             ]);
         }
 
-        // TODO: add data validation
         $title = (string) $request->request->get('title');
         $text = (string) $request->request->get('text');
 
@@ -90,10 +91,19 @@ class NoteController extends AbstractController
         }
 
         $note = new Note($title, $text, $category);
-        $em->persist($note);
-        $em->flush();
 
-        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was created', $note->getTitle()));
+        /** @var ConstraintViolationList $errors */
+        $errors = $validator->validate($note);
+        foreach ($errors as $error) {
+            $this->addFlash(FlashMessagesEnum::FAIL, $error->getMessage());
+        }
+
+        if (!$errors->count()) {
+            $em->persist($note);
+            $em->flush();
+
+            $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was created', $note->getTitle()));
+        }
 
         return $this->redirectToRoute('notelist_create');
     }
