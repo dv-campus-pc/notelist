@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\NoteRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=NoteRepository::class)
@@ -15,17 +18,29 @@ class Note
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
-     * @var string
+     * @Assert\NotBlank(message="Note title should not be blank")
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 30,
+     *      minMessage = "Note title should be at least {{ limit }} characters long",
+     *      maxMessage = "Note title cannot be longer than {{ limit }} characters"
+     * )
      *
      * @ORM\Column(type="string", length=100)
      */
     private string $title;
 
     /**
-     * @var string
+     * @Assert\NotBlank(message="Note text name should not be blank")
+     * @Assert\Length(
+     *      min = 30,
+     *      max = 254,
+     *      minMessage = "Note text should be at least {{ limit }} characters long",
+     *      maxMessage = "Note text cannot be longer than {{ limit }} characters"
+     * )
      *
      * @ORM\Column(type="text")
      */

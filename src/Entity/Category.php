@@ -8,6 +8,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -19,9 +20,17 @@ class Category
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private int $id;
+    private ?int $id = null;
 
     /**
+     * @Assert\NotBlank(message="Category name should not be blank")
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 30,
+     *      minMessage = "Category name should be at least {{ limit }} characters long",
+     *      maxMessage = "Category name cannot be longer than {{ limit }} characters"
+     * )
+     *
      * @ORM\Column(type="string", length=255)
      */
     private string $title;
