@@ -35,7 +35,7 @@ class NoteController extends AbstractController
     public function listAll(EntityManagerInterface $em): Response
     {
         return $this->render('notelist/list.html.twig', [
-            'notes' => $em->getRepository(Note::class)->findAll()
+            'notes' => $em->getRepository(Note::class)->findBy(['user' => $this->getUser()])
         ]);
     }
 
@@ -45,7 +45,8 @@ class NoteController extends AbstractController
     public function listByCategory(string $categoryId, EntityManagerInterface $em): Response
     {
         $notes = $em->getRepository(Note::class)->findBy([
-            'category' => (int) $categoryId
+            'category' => (int) $categoryId,
+            'user' => $this->getUser()
         ]);
 
         return $this->render('notelist/list.html.twig', [
@@ -60,7 +61,8 @@ class NoteController extends AbstractController
     {
         $note = $em->getRepository(Note::class)->findOneBy([
             'category' => (int) $categoryId,
-            'id' => $noteId
+            'id' => $noteId,
+            'user' => $this->getUser()
         ]);
 
         return $this->render('notelist/get.html.twig', [
@@ -74,7 +76,7 @@ class NoteController extends AbstractController
     public function createAction(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): Response
     {
         if ($request->getMethod() === 'GET') {
-            $categories = $em->getRepository(Category::class)->findAll();
+            $categories = $em->getRepository(Category::class)->findBy(['user' => $this->getUser()]);
 
             return $this->render('notelist/create.html.twig', [
                 'categories' => $categories
@@ -85,12 +87,12 @@ class NoteController extends AbstractController
         $text = (string) $request->request->get('text');
 
         $categoryId = (int) $request->request->get('category_id');
-        $category = $em->getRepository(Category::class)->find($categoryId);
+        $category = $em->getRepository(Category::class)->findOneBy(['id' => $categoryId, 'user' => $this->getUser()]);
         if (!$category) {
             throw new NotFoundHttpException('Category not found');
         }
 
-        $note = new Note($title, $text, $category);
+        $note = new Note($title, $text, $category, $this->getUser());
 
         /** @var ConstraintViolationList $errors */
         $errors = $validator->validate($note);
@@ -113,7 +115,7 @@ class NoteController extends AbstractController
      */
     public function deleteAction(int $id, EntityManagerInterface $entityManager): Response
     {
-        $noteToDelete = $this->noteRepository->find($id);
+        $noteToDelete = $this->noteRepository->findOneBy(['id' => $id, 'user' => $this->getUser()]);
         if (!$noteToDelete) {
             throw new NotFoundHttpException('Note not found');
         }
