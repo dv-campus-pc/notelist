@@ -8,6 +8,7 @@ use App\Entity\Category;
 use App\Entity\Note;
 use App\Enum\FlashMessagesEnum;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/notelist", name="notelist_")
+ *
+ * @IsGranted("ROLE_USER")
  */
 class NoteController extends AbstractController
 {
@@ -33,6 +36,8 @@ class NoteController extends AbstractController
 
     /**
      * @Route("/category/{id}", name="list_by_category", requirements={"categoryId"="\d+"})
+     *
+     * @IsGranted("IS_OWNER", subject="category", statusCode=404)
      */
     public function listByCategory(Category $category, EntityManagerInterface $em): Response
     {
@@ -48,6 +53,8 @@ class NoteController extends AbstractController
 
     /**
      * @Route("/{id}", name="get", requirements={"id"="\d+"})
+     *
+     * @IsGranted("IS_OWNER", subject="note", statusCode=404)
      */
     public function getAction(Note $note): Response
     {
@@ -98,6 +105,8 @@ class NoteController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="delete")
+     *
+     * @IsGranted("IS_OWNER", subject="note", statusCode=404)
      */
     public function deleteAction(Note $note, EntityManagerInterface $entityManager): Response
     {

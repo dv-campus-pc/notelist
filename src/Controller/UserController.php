@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Enum\FlashMessagesEnum;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/registration", name="registration", methods={"POST"})
+     * @Route("/registration", name="registration", methods={"POST", "GET"})
+     *
+     * @IsGranted("IS_ANONYMOUS_USER")
      */
     public function registration(
         Request $request,
@@ -95,6 +98,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/login", name="login")
+     *
+     * @IsGranted("IS_ANONYMOUS_USER")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -109,6 +114,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/logout", name="logout", methods={"GET"})
+     *
+     * @IsGranted("ROLE_USER")
      */
     public function logout(): void
     {

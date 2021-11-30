@@ -7,16 +7,18 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Enum\FlashMessagesEnum;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/category", name="category_")
+ *
+ * @IsGranted("ROLE_USER")
  */
 class CategoryController extends AbstractController
 {
@@ -47,6 +49,8 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/{id}", name="delete", requirements={"categoryId"="\d+"})
+     *
+     * @IsGranted("IS_OWNER", subject="category", statusCode=404)
      */
     public function delete(Category $category, EntityManagerInterface $em): Response
     {
