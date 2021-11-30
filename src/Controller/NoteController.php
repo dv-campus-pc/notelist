@@ -7,7 +7,6 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Note;
 use App\Enum\FlashMessagesEnum;
-use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,13 +21,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class NoteController extends AbstractController
 {
-    private NoteRepository $noteRepository;
-
-    public function __construct(NoteRepository $noteRepository)
-    {
-        $this->noteRepository = $noteRepository;
-    }
-
     /**
      * @Route(name="list_all")
      */
@@ -40,12 +32,12 @@ class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/{categoryId}", name="list_by_category", requirements={"categoryId"="\d+"})
+     * @Route("/category/{id}", name="list_by_category", requirements={"categoryId"="\d+"})
      */
-    public function listByCategory(string $categoryId, EntityManagerInterface $em): Response
+    public function listByCategory(Category $category, EntityManagerInterface $em): Response
     {
         $notes = $em->getRepository(Note::class)->findBy([
-            'category' => (int) $categoryId,
+            'category' => $category,
             'user' => $this->getUser()
         ]);
 
@@ -55,16 +47,10 @@ class NoteController extends AbstractController
     }
 
     /**
-     * @Route("/{categoryId}/{noteId}", name="get", requirements={"categoryId"="\d+", "noteId"="\d+"})
+     * @Route("/{id}", name="get", requirements={"id"="\d+"})
      */
-    public function getAction(string $categoryId, string $noteId, EntityManagerInterface $em): Response
+    public function getAction(Note $note): Response
     {
-        $note = $em->getRepository(Note::class)->findOneBy([
-            'category' => (int) $categoryId,
-            'id' => $noteId,
-            'user' => $this->getUser()
-        ]);
-
         return $this->render('notelist/get.html.twig', [
             'note' => $note
         ]);
@@ -113,17 +99,12 @@ class NoteController extends AbstractController
     /**
      * @Route("/delete/{id}", name="delete")
      */
-    public function deleteAction(int $id, EntityManagerInterface $entityManager): Response
+    public function deleteAction(Note $note, EntityManagerInterface $entityManager): Response
     {
-        $noteToDelete = $this->noteRepository->findOneBy(['id' => $id, 'user' => $this->getUser()]);
-        if (!$noteToDelete) {
-            throw new NotFoundHttpException('Note not found');
-        }
-
-        $entityManager->remove($noteToDelete);
+        $entityManager->remove($note);
         $entityManager->flush();
 
-        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was deleted', $noteToDelete->getTitle()));
+        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was deleted', $note->getTitle()));
 
         return $this->redirectToRoute('notelist_list_all');
     }

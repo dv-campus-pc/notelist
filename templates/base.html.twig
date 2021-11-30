@@ -100,12 +100,12 @@
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-10">
-                                        <a href="{{ path('notelist_list_by_category', {'categoryId': category.id }) }}">
+                                        <a href="{{ path('notelist_list_by_category', {'id': category.id }) }}">
                                             {{ category.title }}
                                         </a>
                                     </div>
                                     <div class="col-2">
-                                        <a href="{{ path('category_delete', {'categoryId': category.id}) }}" class="btn btn-danger p-2">
+                                        <a href="{{ path('category_delete', {'id': category.id}) }}" class="btn btn-danger p-2">
                                             x
                                         </a>
                                     </div>
