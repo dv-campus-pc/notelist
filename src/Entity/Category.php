@@ -40,9 +40,16 @@ class Category
      */
     private Collection $notes;
 
-    public function __construct(string $title)
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private User $user;
+
+    public function __construct(string $title, User $user)
     {
         $this->title = $title;
+        $this->user = $user;
         $this->notes = new ArrayCollection();
     }
 
@@ -89,6 +96,18 @@ class Category
                 $note->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -52,11 +52,18 @@ class Note
      */
     private Category $category;
 
-    public function __construct(string $title, string $text, Category $category)
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private User $user;
+
+    public function __construct(string $title, string $text, Category $category, User $user)
     {
         $this->title = $title;
         $this->text = $text;
         $this->category = $category;
+        $this->user = $user;
     }
 
     public function getId(): ?int
@@ -95,6 +102,18 @@ class Note
     public function setCategory(Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
