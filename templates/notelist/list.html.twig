@@ -8,7 +8,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ note.title }}</h5>
                 <p class="card-text">{{ note.text }}</p>
-                <a href="{{ path('notelist_get', {'noteId': note.id, 'categoryId': note.category.id}) }}" class="btn btn-primary">
+                <a href="{{ path('notelist_get', {'id': note.id}) }}" class="btn btn-primary">
                     Read
                 </a>
             </div>

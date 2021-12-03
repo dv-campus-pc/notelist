@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Model\Ownable;
 use App\Repository\NoteRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=NoteRepository::class)
  */
-class Note
+class Note implements Ownable
 {
     /**
      * @ORM\Id
@@ -52,11 +54,18 @@ class Note
      */
     private Category $category;
 
-    public function __construct(string $title, string $text, Category $category)
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private UserInterface $user;
+
+    public function __construct(string $title, string $text, Category $category, UserInterface $user)
     {
         $this->title = $title;
         $this->text = $text;
         $this->category = $category;
+        $this->user = $user;
     }
 
     public function getId(): ?int
@@ -95,6 +104,18 @@ class Note
     public function setCategory(Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getUser(): UserInterface
+    {
+        return $this->user;
+    }
+
+    public function setUser(UserInterface $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

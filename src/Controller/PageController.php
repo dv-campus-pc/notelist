@@ -15,6 +15,10 @@ class PageController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->redirectToRoute('notelist_list_all');
+        if ($this->getUser()) {
+            return $this->redirectToRoute('notelist_list_all');
+        }
+
+        return $this->render('page/home.html.twig');
     }
 }
