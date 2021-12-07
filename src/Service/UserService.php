@@ -53,13 +53,7 @@ class UserService
             return;
         }
 
-        $user = new User($username);
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            $plainPassword
-        );
-        $user->setPassword($hashedPassword);
-
+        $user = $this->create($plainPassword, $username);
         $userErrors = $this->validator->validate($user);
         foreach ($userErrors as $error) {
             $this->session->getFlashBag()->add(FlashMessagesEnum::FAIL, $error->getMessage());
@@ -71,5 +65,17 @@ class UserService
 
             $this->session->getFlashBag()->add(FlashMessagesEnum::SUCCESS, "You have been registered!");
         }
+    }
+
+    public function create(string $plainPassword, string $username): User
+    {
+        $user = new User($username);
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $plainPassword
+        );
+        $user->setPassword($hashedPassword);
+
+        return $user;
     }
 }
