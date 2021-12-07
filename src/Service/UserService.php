@@ -86,4 +86,12 @@ class UserService
             throw new UserValidationException($error->getMessage());
         }
     }
+
+    /**
+     * @return User[]
+     */
+    public function getUserList(): array
+    {
+        return $this->em->getRepository(User::class)->findAll();
+    }
 }
