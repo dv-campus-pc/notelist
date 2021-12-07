@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @UniqueEntity("username")
+ * @UniqueEntity("username", message="User with such name already exists")
  *
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
