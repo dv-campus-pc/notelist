@@ -42,6 +42,11 @@ class Activity
      */
     private $ip;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $statusCode;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +108,18 @@ class Activity
     public function setIp(?string $ip): self
     {
         $this->ip = $ip;
+
+        return $this;
+    }
+
+    public function getStatusCode(): ?int
+    {
+        return $this->statusCode;
+    }
+
+    public function setStatusCode(int $statusCode): self
+    {
+        $this->statusCode = $statusCode;
 
         return $this;
     }
