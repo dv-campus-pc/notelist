@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ActivityRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=ActivityRepository::class)
@@ -46,6 +47,23 @@ class Activity
      * @ORM\Column(type="integer")
      */
     private $statusCode;
+
+    public function __construct(
+        string $method,
+        string $url,
+        DateTime $createdAt,
+        int $statusCode,
+        string $ip = null,
+        User $user = null
+    ) {
+        $this->method = $method;
+        $this->url = $url;
+        $this->user = $user;
+        $this->createdAt = $createdAt;
+        $this->ip = $ip;
+        $this->statusCode = $statusCode;
+    }
+
 
     public function getId(): ?int
     {
