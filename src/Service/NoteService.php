@@ -6,10 +6,8 @@ namespace App\Service;
 
 use App\Entity\Category;
 use App\Entity\Note;
-use App\Enum\FlashMessagesEnum;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -18,16 +16,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class NoteService
 {
     private ValidatorInterface $validator;
-    private Session $session;
     private EntityManagerInterface $em;
 
     public function __construct(
         ValidatorInterface $validator,
-        SessionInterface $session,
         EntityManagerInterface $em
     ) {
         $this->validator = $validator;
-        $this->session = $session;
         $this->em = $em;
     }
 
@@ -43,14 +38,10 @@ class NoteService
         /** @var ConstraintViolationList $errors */
         $errors = $this->validator->validate($note);
         foreach ($errors as $error) {
-            $this->session->getFlashBag()->add(FlashMessagesEnum::FAIL, $error->getMessage());
+            throw new HttpException(400, $error->getMessage());
         }
 
-        if (!$errors->count()) {
-            $this->em->persist($note);
-            $this->em->flush();
-
-            $this->session->getFlashBag()->add(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was created', $note->getTitle()));
-        }
+        $this->em->persist($note);
+        $this->em->flush();
     }
 }
