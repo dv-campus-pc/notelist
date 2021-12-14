@@ -30,4 +30,8 @@ services:
 
     App\EventListener\ConsoleExceptionListener:
         tags:
-            - { name: kernel.event_listener, event: console.error, method: onConsoleException}
+            - { name: kernel.event_listener, event: console.error, method: onConsoleException }
+
+    App\EventListener\ControllerRequestListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onControllerRequest }
