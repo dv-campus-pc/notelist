@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Enum\FlashMessagesEnum;
+use App\Exception\UserValidationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -35,6 +36,32 @@ class UserService
 
     public function createAndFlush(string $plainPassword, string $username): void
     {
+        try {
+            $user = $this->create($plainPassword, $username);
+            $this->em->persist($user);
+            $this->em->flush();
+            $this->session->getFlashBag()->add(FlashMessagesEnum::SUCCESS, "You have been registered!");
+        } catch (UserValidationException $exception) {
+            $this->session->getFlashBag()->add(FlashMessagesEnum::FAIL, $exception->getMessage());
+        }
+    }
+
+    public function create(string $plainPassword, string $username): User
+    {
+        $this->validateUserPassword($plainPassword);
+        $user = new User($username);
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $plainPassword
+        );
+        $user->setPassword($hashedPassword);
+        $this->validateUser($user);
+
+        return $user;
+    }
+
+    private function validateUserPassword(string $plainPassword)
+    {
         /** @var ConstraintViolationList $passwordErrors */
         $passwordErrors = $this->validator->validate($plainPassword, [
             new Assert\NotBlank(['message' => "Password should not be blank"]),
@@ -47,29 +74,24 @@ class UserService
         ]);
         if ($passwordErrors->count()) {
             foreach ($passwordErrors as $error) {
-                $this->session->getFlashBag()->add(FlashMessagesEnum::FAIL, $error->getMessage());
+                throw new UserValidationException($error->getMessage());
             }
-
-            return;
         }
+    }
 
-        $user = new User($username);
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $user,
-            $plainPassword
-        );
-        $user->setPassword($hashedPassword);
-
+    private function validateUser(User $user)
+    {
         $userErrors = $this->validator->validate($user);
         foreach ($userErrors as $error) {
-            $this->session->getFlashBag()->add(FlashMessagesEnum::FAIL, $error->getMessage());
+            throw new UserValidationException($error->getMessage());
         }
+    }
 
-        if (!$userErrors->count()) {
-            $this->em->persist($user);
-            $this->em->flush();
-
-            $this->session->getFlashBag()->add(FlashMessagesEnum::SUCCESS, "You have been registered!");
-        }
+    /**
+     * @return User[]
+     */
+    public function getUserList(): array
+    {
+        return $this->em->getRepository(User::class)->findAll();
     }
 }

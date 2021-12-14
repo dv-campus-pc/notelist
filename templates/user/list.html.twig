@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List all Notes{% endblock %}
+
+{% block body %}
+    {% for user in users %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ user.username }}</h5>
+                <p class="card-text">{{ user.username }}</p>
+                <p class="card-text">Has roles: {{ user.roles | join(', ') }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
