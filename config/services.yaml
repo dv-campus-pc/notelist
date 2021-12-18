@@ -23,3 +23,15 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\EventListener\HttpExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    App\EventListener\ConsoleExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: console.error, method: onConsoleException }
+
+    App\EventListener\ControllerRequestListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onControllerRequest }

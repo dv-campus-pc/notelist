@@ -26,7 +26,9 @@ class CategoryController extends AbstractController
      */
     public function create(Request $request, CategoryService $categoryService): Response
     {
-        $categoryService->createAndFlush((string) $request->request->get('name'), $this->getUser());
+        $categoryName = (string) $request->request->get('name');
+        $categoryService->createAndFlush($categoryName, $this->getUser());
+        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Category %s was created', $categoryName));
 
         return $this->redirectToRoute('page_home');
     }

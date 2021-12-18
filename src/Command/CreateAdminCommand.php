@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CreateAdminCommand extends Command
@@ -27,29 +28,22 @@ class CreateAdminCommand extends Command
         $this->em = $em;
     }
 
-    protected function configure(): void
-    {
-        $this
-            ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'User name')
-            ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'User password')
-        ;
-    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-        $userName = $input->getOption('username');
-        $password = $input->getOption('password');
+        $helper = $this->getHelper('question');
+        $question1 = new Question('Please enter admin user name: ');
+        $question2 = new Question('Please enter admin password: ');
+        $userName = $helper->ask($input, $output, $question1);
+        $password = $helper->ask($input, $output, $question2);
 
-        try {
-            $user = $this->userService->create($password, $userName);
-            $user->addRole(RolesEnum::ADMIN);
-            $this->em->persist($user);
-            $this->em->flush();
-            $io->success('Admin user successfully created');
-        } catch (\Exception $e) {
-            $io->error($e->getMessage());
-        }
+        $io = new SymfonyStyle($input, $output);
+
+        $user = $this->userService->create($password, $userName);
+        $user->addRole(RolesEnum::ADMIN);
+        $this->em->persist($user);
+        $this->em->flush();
+        $io->success('Admin user successfully created');
 
         return Command::SUCCESS;
     }
