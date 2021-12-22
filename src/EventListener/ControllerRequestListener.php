@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Entity\Activity;
 use App\Service\ActivityService;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 

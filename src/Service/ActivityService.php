@@ -2,30 +2,34 @@
 
 namespace App\Service;
 
-use App\Entity\Activity;
+use App\Entity\Activity\VisitActivity;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use DateTime;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ActivityService
 {
     private EntityManagerInterface $em;
+    private TokenStorageInterface $tokenStorage;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
     {
         $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function createFromRequestResponse(Request $request, Response $response)
     {
-        $activity = new Activity(
+        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
+
+        $activity = new VisitActivity(
             $request->getMethod(),
             $request->getUri(),
-            new DateTime,
             $response->getStatusCode(),
-            $request->getClientIp()
-            //TODO add user here;
+            $request->getClientIp(),
+            $user instanceof User ? $user : null
         );
 
         $this->em->persist($activity);
