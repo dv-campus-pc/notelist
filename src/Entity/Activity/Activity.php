@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\User;
 use DateTime;
 use DateTimeInterface;
+use App\Repository\ActivityRepository;
 
 /**
  * @ORM\Entity(repositoryClass=ActivityRepository::class)
