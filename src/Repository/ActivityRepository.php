@@ -22,8 +22,14 @@ class ActivityRepository extends ServiceEntityRepository
     public function getVisitActivityData(): array
     {
         $connection = $this->getEntityManager()->getConnection();
-        $stmt = $connection->prepare('SELECT * FROM `activity`');
+        $stmt = $connection->prepare('
+            SELECT * FROM `activity`
+            WHERE type = :type
+        ');
+        $result = $stmt->executeQuery([
+            'type' => 'visit'
+        ]);
 
-        return $stmt->executeQuery()->fetchAllAssociative();
+        return $result->fetchAllAssociative();
     }
 }
