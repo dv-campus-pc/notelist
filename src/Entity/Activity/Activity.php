@@ -28,7 +28,7 @@ abstract class Activity
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      */
-    private ?User $user = null;
+    private ?User $user;
 
     /**
      * @ORM\Column(type="datetime")
