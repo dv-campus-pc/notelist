@@ -100,4 +100,30 @@ class NoteController extends AbstractController
 
         return $this->redirectToRoute('notelist_list_all');
     }
+
+    /**
+     * @Route("/edit/{id}", name="edit", methods={"GET", "POST"})
+     */
+    public function editAction(Request $request, Note $note, EntityManagerInterface $em, NoteService $noteService): Response
+    {
+        if ($request->getMethod() === 'GET') {
+            $categories = $em->getRepository(Category::class)->findBy(['user' => $this->getUser()]);
+
+            return $this->render('notelist/edit.html.twig', [
+                'note' => $note,
+                'categories' => $categories
+            ]);
+        }
+
+        $title = (string) $request->request->get('title');
+        $noteService->editAndFlush(
+            $note,
+            $title,
+            (string) $request->request->get('text'),
+            (int) $request->request->get('category_id')
+        );
+        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was edited', $title));
+
+        return $this->redirectToRoute('notelist_get', ['id' => $note->getId()]);
+    }
 }
