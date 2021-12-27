@@ -28,7 +28,7 @@ class NoteController extends AbstractController
     public function listAll(EntityManagerInterface $em): Response
     {
         return $this->render('notelist/list.html.twig', [
-            'notes' => $em->getRepository(Note::class)->findBy(['user' => $this->getUser()])
+            'notes' => $em->getRepository(Note::class)->findByUser($this->getUser())
         ]);
     }
 
@@ -39,10 +39,7 @@ class NoteController extends AbstractController
      */
     public function listByCategory(Category $category, EntityManagerInterface $em): Response
     {
-        $notes = $em->getRepository(Note::class)->findBy([
-            'category' => $category,
-            'user' => $this->getUser()
-        ]);
+        $notes = $em->getRepository(Note::class)->findByCategoryAndUser($category, $this->getUser());
 
         return $this->render('notelist/list.html.twig', [
             'notes' => $notes
