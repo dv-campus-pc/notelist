@@ -28,7 +28,7 @@ class NoteController extends AbstractController
     public function listAll(EntityManagerInterface $em): Response
     {
         return $this->render('notelist/list.html.twig', [
-            'notes' => $em->getRepository(Note::class)->findBy(['user' => $this->getUser()])
+            'notes' => $em->getRepository(Note::class)->findByUser($this->getUser())
         ]);
     }
 
@@ -39,10 +39,7 @@ class NoteController extends AbstractController
      */
     public function listByCategory(Category $category, EntityManagerInterface $em): Response
     {
-        $notes = $em->getRepository(Note::class)->findBy([
-            'category' => $category,
-            'user' => $this->getUser()
-        ]);
+        $notes = $em->getRepository(Note::class)->findByCategoryAndUser($category, $this->getUser());
 
         return $this->render('notelist/list.html.twig', [
             'notes' => $notes
@@ -99,5 +96,31 @@ class NoteController extends AbstractController
         $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was deleted', $note->getTitle()));
 
         return $this->redirectToRoute('notelist_list_all');
+    }
+
+    /**
+     * @Route("/edit/{id}", name="edit", methods={"GET", "POST"})
+     */
+    public function editAction(Request $request, Note $note, EntityManagerInterface $em, NoteService $noteService): Response
+    {
+        if ($request->getMethod() === 'GET') {
+            $categories = $em->getRepository(Category::class)->findBy(['user' => $this->getUser()]);
+
+            return $this->render('notelist/edit.html.twig', [
+                'note' => $note,
+                'categories' => $categories
+            ]);
+        }
+
+        $title = (string) $request->request->get('title');
+        $noteService->editAndFlush(
+            $note,
+            $title,
+            (string) $request->request->get('text'),
+            (int) $request->request->get('category_id')
+        );
+        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was edited', $title));
+
+        return $this->redirectToRoute('notelist_get', ['id' => $note->getId()]);
     }
 }

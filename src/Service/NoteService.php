@@ -44,4 +44,25 @@ class NoteService
         $this->em->persist($note);
         $this->em->flush();
     }
+
+    public function editAndFlush(Note $note, string $title, string $text, int $categoryId): void
+    {
+        $category = $this->em->getRepository(Category::class)->findOneBy(['id' => $categoryId, 'user' => $note->getUser()]);
+        if (!$category) {
+            throw new NotFoundHttpException('Category not found');
+        }
+
+        $note->setTitle($title)
+            ->setText($text)
+            ->setCategory($category);
+
+        /** @var ConstraintViolationList $errors */
+        $errors = $this->validator->validate($note);
+        foreach ($errors as $error) {
+            throw new HttpException(400, $error->getMessage());
+        }
+
+        $this->em->persist($note);
+        $this->em->flush();
+    }
 }

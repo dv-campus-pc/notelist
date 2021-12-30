@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ActivityController!{% endblock %}
+
+{% block body %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Created at</th>
+            <th scope="col">User</th>
+            <th scope="col">Url</th>
+            <th scope="col">Method</th>
+            <th scope="col">Ip</th>
+            <th scope="col">Status code</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+            <tr>
+                <td>{{ item.created_at }}</td>
+                <td>{{ item.user_id }}</td>
+                <td>{{ item.url }}</td>
+                <td>{{ item.method }}</td>
+                <td>{{ item.ip }}</td>
+                <td>{{ item.status_code }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -14,7 +14,8 @@ use App\Entity\User;
 class EditNoteActivity extends Activity
 {
     /**
-     * @ORM\ManyToOne(targetEntity=App\Entity\Note::class)
+     * @ORM\ManyToOne(targetEntity=Note::class)
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private Note $note;
 

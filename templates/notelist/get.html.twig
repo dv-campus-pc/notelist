@@ -12,6 +12,9 @@
             <a class="btn btn-outline-danger float-end" href="{{ path('notelist_delete', {'id': note.id}) }}" role="button">
                 Delete
             </a>
+            <a class="btn btn-outline-info float-end" href="{{ path('notelist_edit', {'id': note.id}) }}" role="button">
+                Edit
+            </a>
         </div>
     </div>
 {% endblock %}
