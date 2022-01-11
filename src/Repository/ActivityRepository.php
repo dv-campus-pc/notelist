@@ -26,6 +26,7 @@ class ActivityRepository extends ServiceEntityRepository
         $stmt = $connection->prepare('
             SELECT * FROM `activity`
             WHERE type = :type
+            ORDER BY created_at DESC
         ');
         $result = $stmt->executeQuery([
             'type' => 'visit'
@@ -48,6 +49,7 @@ class ActivityRepository extends ServiceEntityRepository
             
             WHERE type = :type
             AND activity.user_id = :user
+            ORDER BY created_at DESC
         ');
         $result = $stmt->executeQuery([
             'type' => 'edit_notelist',
