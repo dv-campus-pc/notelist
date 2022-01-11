@@ -87,7 +87,7 @@ class NoteController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"GET", "POST"})
      */
-    public function newAction(Request $request, EntityManagerInterface $em, NoteService $noteService): Response
+    public function newAction(Request $request, EntityManagerInterface $em): Response
     {
         $categories = $em->getRepository(Category::class)->findBy(
             [
@@ -96,6 +96,15 @@ class NoteController extends AbstractController
         );
         $note = new Note('', '', $categories[0], $this->getUser());
         $form = $this->createForm(NoteType::class, $note);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($note);
+            $em->flush();
+            $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was successfully created', $note->getTitle()));
+
+            return $this->redirectToRoute('notelist_list_all');
+        }
 
         return $this->renderForm('notelist/new.html.twig', [
             'form' => $form,
