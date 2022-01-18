@@ -19,9 +19,15 @@ class EditNoteActivity extends Activity
      */
     private Note $note;
 
-    public function __construct(User $user, Note $note) {
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $changes = [];
+
+    public function __construct(User $user, Note $note, array $changes) {
         parent::__construct($user);
         $this->note = $note;
+        $this->changes = $changes;
     }
 
     public function getNote(): Note
@@ -32,6 +38,18 @@ class EditNoteActivity extends Activity
     public function setNote(Note $note): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getChanges(): ?array
+    {
+        return $this->changes;
+    }
+
+    public function setChanges(?array $changes): self
+    {
+        $this->changes = $changes;
 
         return $this;
     }

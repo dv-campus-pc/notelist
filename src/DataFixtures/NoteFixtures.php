@@ -39,7 +39,8 @@ class NoteFixtures extends Fixture
         $categories = [];
 
         for ($i = 0; $i < 3; $i++) {
-            $category = new Category($this->categoryTitles[$i], $users[$i]);
+            $category = new Category($this->categoryTitles[$i]);
+            $category->setUser($users[$i]);
             $manager->persist($category);
 
             $categories[] = $category;
@@ -50,9 +51,9 @@ class NoteFixtures extends Fixture
             $note = new Note(
                 'Some note ' . $i,
                 'Lorem ipsum ' . $i,
-                $category,
-                $category->getUser()
+                $category
             );
+            $note->setUser($category->getUser());
             $manager->persist($note);
         }
 

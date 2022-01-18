@@ -1,37 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Add new Note{% endblock %}
+{% block title %}Edit note "{{ note.title }}"{% endblock %}
 
 {% block body %}
     <div class="card">
         <h5 class="card-header">Edit "{{ note.title }}" note</h5>
         <div class="card-body">
-            <form class="row g-3" method="POST">
-                <div class="col-12">
-                    <label for="inputTitle" class="form-label">Title</label>
-                    <input type="text" class="form-control" id="inputTitle" name="title" value="{{ note.title }}" required>
-                </div>
+            {{ form_start(form) }}
+                {{ form_errors(form) }}
+                {{ form_help(form) }}
+                {{ form_rest(form) }}
 
-                <div class="col-12">
-                    <label for="inputText" class="form-label">Text</label>
-                    <textarea class="form-control" id="inputText" name="text" required>{{ note.text }}</textarea>
-                </div>
+                <input type="submit" value="Save Note" class="btn btn-success" />
 
-                <div class="col-12">
-                    <label for="inputCategory" class="form-label">Category</label>
-                    <select id="inputCategory" class="form-select" name="category_id">
-                        {% for category in categories %}
-                            <option value="{{ category.id }}"{% if category == note.category %} selected{% endif %}>
-                                {{ category.title }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="col-12">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-            </form>
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}

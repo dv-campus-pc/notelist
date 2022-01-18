@@ -48,10 +48,9 @@ class Category implements Ownable
      */
     private UserInterface $user;
 
-    public function __construct(string $title, UserInterface $user)
+    public function __construct(string $title)
     {
         $this->title = $title;
-        $this->user = $user;
         $this->notes = new ArrayCollection();
     }
 

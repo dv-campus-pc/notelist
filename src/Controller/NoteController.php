@@ -62,43 +62,13 @@ class NoteController extends AbstractController
     /**
      * @Route("/create", name="create", methods={"GET", "POST"})
      */
-    public function createAction(Request $request, EntityManagerInterface $em, NoteService $noteService): Response
+    public function createAction(Request $request, EntityManagerInterface $em): Response
     {
-        if ($request->getMethod() === 'GET') {
-            $categories = $em->getRepository(Category::class)->findBy(['user' => $this->getUser()]);
-
-            return $this->render('notelist/create.html.twig', [
-                'categories' => $categories
-            ]);
-        }
-
-        $title = (string) $request->request->get('title');
-        $noteService->createAndFlush(
-            $title,
-            (string) $request->request->get('text'),
-            (int) $request->request->get('category_id'),
-            $this->getUser()
-        );
-        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was created', $title));
-
-        return $this->redirectToRoute('notelist_create');
-    }
-
-    /**
-     * @Route("/new", name="new", methods={"GET", "POST"})
-     */
-    public function newAction(Request $request, EntityManagerInterface $em): Response
-    {
-        $categories = $em->getRepository(Category::class)->findBy(
-            [
-                'user' => $this->getUser(),
-            ]
-        );
-        $note = new Note('', '', $categories[0], $this->getUser());
-        $form = $this->createForm(NoteType::class, $note);
+        $form = $this->createForm(NoteType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $note = $form->getData();
             $em->persist($note);
             $em->flush();
             $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was successfully created', $note->getTitle()));
@@ -106,7 +76,7 @@ class NoteController extends AbstractController
             return $this->redirectToRoute('notelist_list_all');
         }
 
-        return $this->renderForm('notelist/new.html.twig', [
+        return $this->renderForm('notelist/create.html.twig', [
             'form' => $form,
         ]);
     }
@@ -129,26 +99,21 @@ class NoteController extends AbstractController
     /**
      * @Route("/edit/{id}", name="edit", methods={"GET", "POST"})
      */
-    public function editAction(Request $request, Note $note, EntityManagerInterface $em, NoteService $noteService): Response
+    public function editAction(Request $request, Note $note, EntityManagerInterface $em): Response
     {
-        if ($request->getMethod() === 'GET') {
-            $categories = $em->getRepository(Category::class)->findBy(['user' => $this->getUser()]);
+        $form = $this->createForm(NoteType::class, $note);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($note);
+            $em->flush();
+            $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was successfully changed', $note->getTitle()));
 
-            return $this->render('notelist/edit.html.twig', [
-                'note' => $note,
-                'categories' => $categories
-            ]);
+            return $this->redirectToRoute('notelist_get', ['id' => $note->getId()]);
         }
 
-        $title = (string) $request->request->get('title');
-        $noteService->editAndFlush(
-            $note,
-            $title,
-            (string) $request->request->get('text'),
-            (int) $request->request->get('category_id')
-        );
-        $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was edited', $title));
-
-        return $this->redirectToRoute('notelist_get', ['id' => $note->getId()]);
+        return $this->renderForm('notelist/edit.html.twig', [
+            'form' => $form,
+            'note' => $note,
+        ]);
     }
 }

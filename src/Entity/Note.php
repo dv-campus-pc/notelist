@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use LogicException;
 
 /**
  * @ORM\Entity(repositoryClass=NoteRepository::class)
@@ -68,15 +69,13 @@ class Note implements Ownable
      */
     private UserInterface $owner;
 
-    public function __construct(string $title, string $text, Category $category, UserInterface $owner)
+    public function __construct(string $title, string $text, Category $category)
     {
         $this->title = $title;
         $this->text = $text;
         $this->category = $category;
-        $this->owner = $owner;
 
         $this->users = new ArrayCollection();
-        $this->users->add($owner);
     }
 
     public function getId(): ?int
@@ -146,5 +145,11 @@ class Note implements Ownable
     public function getUser(): UserInterface
     {
         return $this->getOwner();
+    }
+
+    public function setUser(UserInterface $user)
+    {
+        $this->owner = $user;
+        $this->users->add($user);
     }
 }

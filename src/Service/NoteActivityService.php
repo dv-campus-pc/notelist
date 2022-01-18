@@ -20,7 +20,7 @@ class NoteActivityService
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function createNoteEditActivity(Note $note)
+    public function createNoteEditActivity(Note $note, array $changes)
     {
         $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
 
@@ -28,7 +28,7 @@ class NoteActivityService
             throw new HttpException(400, 'User not exists in request');
         }
 
-        $activity = new EditNoteActivity($user, $note);
+        $activity = new EditNoteActivity($user, $note, $changes);
 
         $this->em->persist($activity);
         $this->em->flush();
