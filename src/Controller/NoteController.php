@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Note;
 use App\Enum\FlashMessagesEnum;
+use App\Form\NoteType;
 use App\Service\NoteService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -81,6 +82,33 @@ class NoteController extends AbstractController
         $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was created', $title));
 
         return $this->redirectToRoute('notelist_create');
+    }
+
+    /**
+     * @Route("/new", name="new", methods={"GET", "POST"})
+     */
+    public function newAction(Request $request, EntityManagerInterface $em): Response
+    {
+        $categories = $em->getRepository(Category::class)->findBy(
+            [
+                'user' => $this->getUser(),
+            ]
+        );
+        $note = new Note('', '', $categories[0], $this->getUser());
+        $form = $this->createForm(NoteType::class, $note);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($note);
+            $em->flush();
+            $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was successfully created', $note->getTitle()));
+
+            return $this->redirectToRoute('notelist_list_all');
+        }
+
+        return $this->renderForm('notelist/new.html.twig', [
+            'form' => $form,
+        ]);
     }
 
     /**
