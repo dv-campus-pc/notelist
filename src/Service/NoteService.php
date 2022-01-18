@@ -9,7 +9,6 @@ use App\Entity\Note;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -26,14 +25,14 @@ class NoteService
         $this->em = $em;
     }
 
-    public function createAndFlush(string $title, string $text, int $categoryId, UserInterface $user): void
+    public function createAndFlush(string $title, string $text, int $categoryId): void
     {
         $category = $this->em->getRepository(Category::class)->findOneBy(['id' => $categoryId, 'user' => $user]);
         if (!$category) {
             throw new NotFoundHttpException('Category not found');
         }
 
-        $note = new Note($title, $text, $category, $user);
+        $note = new Note($title, $text, $category);
 
         /** @var ConstraintViolationList $errors */
         $errors = $this->validator->validate($note);

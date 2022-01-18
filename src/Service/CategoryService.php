@@ -7,7 +7,6 @@ namespace App\Service;
 use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -24,9 +23,9 @@ class CategoryService
         $this->em = $em;
     }
 
-    public function createAndFlush(string $name, UserInterface $user): void
+    public function createAndFlush(string $name): void
     {
-        $category = new Category($name, $user);
+        $category = new Category($name);
 
         /** @var ConstraintViolationList $errors */
         $errors = $this->validator->validate($category);

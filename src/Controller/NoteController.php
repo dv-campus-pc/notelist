@@ -76,8 +76,7 @@ class NoteController extends AbstractController
         $noteService->createAndFlush(
             $title,
             (string) $request->request->get('text'),
-            (int) $request->request->get('category_id'),
-            $this->getUser()
+            (int) $request->request->get('category_id')
         );
         $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was created', $title));
 
@@ -89,16 +88,11 @@ class NoteController extends AbstractController
      */
     public function newAction(Request $request, EntityManagerInterface $em): Response
     {
-        $categories = $em->getRepository(Category::class)->findBy(
-            [
-                'user' => $this->getUser(),
-            ]
-        );
-        $note = new Note('', '', $categories[0], $this->getUser());
-        $form = $this->createForm(NoteType::class, $note);
+        $form = $this->createForm(NoteType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $note = $form->getData();
             $em->persist($note);
             $em->flush();
             $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was successfully created', $note->getTitle()));

@@ -7,6 +7,7 @@ use App\Repository\CategoryRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -43,6 +44,13 @@ class NoteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Note::class,
+            'empty_data' => static function (FormInterface $form) {
+                return new Note(
+                    $form->get('title')->getData(),
+                    $form->get('text')->getData(),
+                    $form->get('category')->getData()
+                );
+            },
         ]);
     }
 

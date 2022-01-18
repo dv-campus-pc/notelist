@@ -40,3 +40,7 @@ services:
     App\EventListener\EditNoteActivityListener:
         tags:
             - { name: doctrine.orm.entity_listener, event: postUpdate, entity: App\Entity\Note, lazy: true }
+
+    App\EventListener\OwnableEntityListener:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist, lazy: true }
