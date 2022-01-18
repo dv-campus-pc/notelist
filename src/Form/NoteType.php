@@ -36,7 +36,6 @@ class NoteType extends AbstractType
                 'choice_label' => 'username',
                 'label' => 'Shared to users',
             ])
-            ->add('save', SubmitType::class)
         ;
     }
 
