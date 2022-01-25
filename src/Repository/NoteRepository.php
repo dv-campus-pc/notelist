@@ -28,6 +28,7 @@ class NoteRepository extends ServiceEntityRepository
             ->select('note')
             ->join('note.users', 'user')
             ->where('user = :user')
+            ->orderBy('note.id', 'DESC')
             ->setParameter(':user', $user);
     }
 
