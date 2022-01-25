@@ -8,13 +8,16 @@
         <div class="card-body">
             <p class="card-text">{{ note.text }}</p>
         </div>
-        <div class="card-header">
-            <a class="btn btn-outline-danger float-end" href="{{ path('notelist_delete', {'id': note.id}) }}" role="button">
-                Delete
-            </a>
-            <a class="btn btn-outline-info float-end" href="{{ path('notelist_edit', {'id': note.id}) }}" role="button">
-                Edit
-            </a>
+        <div class="card-header d-flex justify-content-between">
+            <p class="card-text">Category: {{ note.category.title }}</p>
+            <div>
+                <a class="btn btn-outline-danger float-end" href="{{ path('notelist_delete', {'id': note.id}) }}" role="button">
+                    Delete
+                </a>
+                <a class="btn btn-outline-info float-end" href="{{ path('notelist_edit', {'id': note.id}) }}" role="button">
+                    Edit
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}
