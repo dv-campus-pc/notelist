@@ -50,7 +50,7 @@ class ActivityController extends AbstractController
     {
         return $this->render('activity/note.html.twig', [
             'data' => $em->getRepository(Activity::class)->getNoteActivityData($this->getUser()),
-            'lastPage' => 100,
+            'lastPage' => 1,
         ]);
     }
 }

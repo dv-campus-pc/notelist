@@ -19,7 +19,10 @@ class PaginationService
 
     public function lastPage(Paginator $paginator): int
     {
-        return 10;
+        $query = $paginator->getQuery();
+        $limit = $query->getMaxResults()?:1;
+
+        return (int) ceil($paginator->count() / $limit);
     }
 
     private function getCurrentPage(Request $request): int
