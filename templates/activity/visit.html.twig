@@ -15,16 +15,17 @@
         </tr>
         </thead>
         <tbody>
-            {% for item in data %}
+            {% for activity in activities %}
             <tr>
-                <td>{{ item.created_at }}</td>
-                <td>{{ item.user_id }}</td>
-                <td class="brake-word">{{ item.url }}</td>
-                <td>{{ item.method }}</td>
-                <td>{{ item.ip }}</td>
-                <td>{{ item.status_code }}</td>
+                <td>{{ activity.createdAt|date("Y-m-d H:i:s", "Europe/Kiev") }}</td>
+                <td>{{ activity.user ? activity.user.username : '-' }}</td>
+                <td class="brake-word">{{ activity.url }}</td>
+                <td>{{ activity.method }}</td>
+                <td>{{ activity.ip }}</td>
+                <td>{{ activity.statusCode }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    {{ include('pagination.html.twig') }}
 {% endblock %}

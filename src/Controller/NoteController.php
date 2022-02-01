@@ -9,6 +9,7 @@ use App\Entity\Note;
 use App\Enum\FlashMessagesEnum;
 use App\Form\NoteType;
 use App\Service\NoteService;
+use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,13 +24,26 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class NoteController extends AbstractController
 {
+    private PaginationService $paginationService;
+
+    public function __construct(PaginationService $paginationService)
+    {
+        $this->paginationService = $paginationService;
+    }
+
     /**
      * @Route(name="list_all")
      */
-    public function listAll(EntityManagerInterface $em): Response
+    public function listAll(EntityManagerInterface $em, Request $request): Response
     {
+        $data = $this->paginationService->paginator(
+            $em->getRepository(Note::class)->selectByUser($this->getUser()),
+            $request
+        );
+
         return $this->render('notelist/list.html.twig', [
-            'notes' => $em->getRepository(Note::class)->findByUser($this->getUser())
+            'notes' => $data,
+            'lastPage' => $this->paginationService->lastPage($data),
         ]);
     }
 
@@ -38,12 +52,16 @@ class NoteController extends AbstractController
      *
      * @IsGranted("IS_OWNER", subject="category", statusCode=404)
      */
-    public function listByCategory(Category $category, EntityManagerInterface $em): Response
+    public function listByCategory(Category $category, EntityManagerInterface $em, Request $request): Response
     {
-        $notes = $em->getRepository(Note::class)->findByCategoryAndUser($category, $this->getUser());
-
+        $data = $this->paginationService->paginator(
+            $em->getRepository(Note::class)->selectByCategoryAndUser($category, $this->getUser()),
+            $request,
+            2
+        );
         return $this->render('notelist/list.html.twig', [
-            'notes' => $notes
+            'notes' => $data,
+            'lastPage' => $this->paginationService->lastPage($data),
         ]);
     }
 

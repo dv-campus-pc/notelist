@@ -1,0 +1,41 @@
+{% set currentPage = max(app.request.query.get('page') ? : 1, 1) %}
+{% set currentRoute = app.request.attributes.get('_route') %}
+{% set requestParams = app.request.query.all %}
+{% set nearbyPageButtons = 2 %}
+{% if lastPage > 1 %}
+<div class="mb-12">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if currentPage > 1  %}
+            <li class="page-item">
+                <a class="page-link" href="{{ path(currentRoute, requestParams|merge({page: currentPage - 1})) }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="page-item {{ currentPage == 1 ? 'active' : '' }}"><a class="page-link" href="{{ path(currentRoute, requestParams|merge({page: 1})) }}">{{ 1 }}</a></li>
+            {% if currentPage > nearbyPageButtons + 1 %}
+            <li class="page-item disabled"><a class="page-link">...</a></li>
+            {% endif %}
+            {% if lastPage > 2 %}
+            {% for page in 2..lastPage-1 %}
+                {% if (page >= currentPage - nearbyPageButtons) and (page <= currentPage + nearbyPageButtons) %}
+                <li class="page-item {{ page == currentPage ? 'active' : '' }}"><a class="page-link" href="{{ path(currentRoute, requestParams|merge({page: page})) }}">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% if currentPage + nearbyPageButtons + 1 < lastPage %}
+                <li class="page-item disabled"><a class="page-link">...</a></li>
+            {% endif %}
+            <li class="page-item {{ currentPage == lastPage ? 'active' : '' }}"><a class="page-link" href="{{ path(currentRoute, requestParams|merge({page: lastPage})) }}">{{ lastPage }}</a></li>
+            {% if currentPage != lastPage %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(currentRoute, requestParams|merge({page: currentPage + 1})) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endif %}

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Activity\Activity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -20,29 +21,26 @@ class ActivityRepository extends ServiceEntityRepository
         parent::__construct($registry, Activity::class);
     }
 
-    public function getVisitActivityData(): array
-    {
-        $connection = $this->getEntityManager()->getConnection();
-        $stmt = $connection->prepare('
-            SELECT * FROM `activity`
-            WHERE type = :type
-            ORDER BY created_at DESC
-        ');
-        $result = $stmt->executeQuery([
-            'type' => 'visit'
-        ]);
-
-        return $result->fetchAllAssociative();
-    }
-
-    public function getVisitActivityDataQB(int $itemsPerPage = 10, int $offset = 0): array
+    /**
+     * @return QueryBuilder
+     */
+    public function selectVisitActivityData(): QueryBuilder
     {
         return $this->createQueryBuilder('activity')
             ->orderBy('activity.createdAt', 'DESC')
-            ->setMaxResults($itemsPerPage)
-            ->setFirstResult($offset)
-            ->getQuery()
-            ->getResult();
+            ->where('activity INSTANCE OF App\Entity\Activity\VisitActivity');
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function selectNoteActivityData(UserInterface $user): QueryBuilder
+    {
+        return $this->createQueryBuilder('activity')
+            ->orderBy('activity.createdAt', 'DESC')
+            ->where('activity.user = :user')
+            ->andWhere('activity INSTANCE OF App\Entity\Activity\EditNoteActivity')
+            ->setParameter('user', $user);
     }
 
     public function getNoteActivityData(UserInterface $user): array

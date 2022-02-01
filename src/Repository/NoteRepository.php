@@ -22,7 +22,7 @@ class NoteRepository extends ServiceEntityRepository
         parent::__construct($registry, Note::class);
     }
 
-    private function selectByUser(UserInterface $user): QueryBuilder
+    public function selectByUser(UserInterface $user): QueryBuilder
     {
         return $this->createQueryBuilder('note')
             ->select('note')
@@ -39,12 +39,10 @@ class NoteRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findByCategoryAndUser(Category $category, UserInterface $user): array
+    public function selectByCategoryAndUser(Category $category, UserInterface $user): QueryBuilder
     {
         return $this->selectByUser($user)
             ->andWhere('note.category = :category')
-            ->setParameter(':category', $category)
-            ->getQuery()
-            ->getResult();
+            ->setParameter(':category', $category);
     }
 }
