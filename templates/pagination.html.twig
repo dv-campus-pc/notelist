@@ -17,11 +17,13 @@
             {% if currentPage > nearbyPageButtons + 1 %}
             <li class="page-item disabled"><a class="page-link">...</a></li>
             {% endif %}
+            {% if lastPage > 2 %}
             {% for page in 2..lastPage-1 %}
                 {% if (page >= currentPage - nearbyPageButtons) and (page <= currentPage + nearbyPageButtons) %}
                 <li class="page-item {{ page == currentPage ? 'active' : '' }}"><a class="page-link" href="{{ path(currentRoute, requestParams|merge({page: page})) }}">{{ page }}</a></li>
                 {% endif %}
             {% endfor %}
+            {% endif %}
             {% if currentPage + nearbyPageButtons + 1 < lastPage %}
                 <li class="page-item disabled"><a class="page-link">...</a></li>
             {% endif %}
