@@ -21,21 +21,6 @@ class ActivityRepository extends ServiceEntityRepository
         parent::__construct($registry, Activity::class);
     }
 
-    public function getVisitActivityData(): array
-    {
-        $connection = $this->getEntityManager()->getConnection();
-        $stmt = $connection->prepare('
-            SELECT * FROM `activity`
-            WHERE type = :type
-            ORDER BY created_at DESC
-        ');
-        $result = $stmt->executeQuery([
-            'type' => 'visit'
-        ]);
-
-        return $result->fetchAllAssociative();
-    }
-
     /**
      * @param int $itemsPerPage
      * @param int $offset
