@@ -31,6 +31,18 @@ class ActivityRepository extends ServiceEntityRepository
             ->where('activity INSTANCE OF App\Entity\Activity\VisitActivity');
     }
 
+    /**
+     * @return QueryBuilder
+     */
+    public function selectNoteActivityData(UserInterface $user): QueryBuilder
+    {
+        return $this->createQueryBuilder('activity')
+            ->orderBy('activity.createdAt', 'DESC')
+            ->where('activity.user = :user')
+            ->andWhere('activity INSTANCE OF App\Entity\Activity\EditNoteActivity')
+            ->setParameter('user', $user);
+    }
+
     public function getNoteActivityData(UserInterface $user): array
     {
         $connection = $this->getEntityManager()->getConnection();

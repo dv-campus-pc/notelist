@@ -46,11 +46,17 @@ class ActivityController extends AbstractController
      * @Route("/note", name="note")
      * @IsGranted("ROLE_USER")
      */
-    public function note(EntityManagerInterface $em): Response
+    public function note(EntityManagerInterface $em, Request $request): Response
     {
+        $data = $this->paginationService->paginator(
+            $em->getRepository(Activity::class)->selectNoteActivityData($this->getUser()),
+            $request,
+            2
+        );
+
         return $this->render('activity/note.html.twig', [
-            'data' => $em->getRepository(Activity::class)->getNoteActivityData($this->getUser()),
-            'lastPage' => 1,
+            'data' => $data,
+            'lastPage' => $this->paginationService->lastPage($data),
         ]);
     }
 }
