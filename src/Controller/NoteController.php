@@ -50,7 +50,7 @@ class NoteController extends AbstractController
     /**
      * @Route("/{id}", name="get", requirements={"id"="\d+"})
      *
-     * @IsGranted("IS_OWNER", subject="note", statusCode=404)
+     * @IsGranted("IS_SHARED", subject="note", statusCode=404)
      */
     public function getAction(Note $note): Response
     {
@@ -84,11 +84,15 @@ class NoteController extends AbstractController
     /**
      * @Route("/delete/{id}", name="delete")
      *
-     * @IsGranted("IS_OWNER", subject="note", statusCode=404)
+     * @IsGranted("IS_SHARED", subject="note", statusCode=404)
      */
     public function deleteAction(Note $note, EntityManagerInterface $entityManager): Response
     {
-        $entityManager->remove($note);
+        if ($this->getUser() === $note->getUser()) {
+            $entityManager->remove($note);
+        } else {
+            $note->getUsers()->removeElement($this->getUser());
+        }
         $entityManager->flush();
 
         $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was deleted', $note->getTitle()));

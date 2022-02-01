@@ -1,3 +1,7 @@
 .app-sidebar ul.list-group li div.col-2 a {
     font-size: 10px;
 }
+
+.brake-word {
+    word-break: break-all;
+}

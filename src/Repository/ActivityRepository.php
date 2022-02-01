@@ -35,6 +35,16 @@ class ActivityRepository extends ServiceEntityRepository
         return $result->fetchAllAssociative();
     }
 
+    public function getVisitActivityDataQB(int $itemsPerPage = 10, int $offset = 0): array
+    {
+        return $this->createQueryBuilder('activity')
+            ->orderBy('activity.createdAt', 'DESC')
+            ->setMaxResults($itemsPerPage)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getNoteActivityData(UserInterface $user): array
     {
         $connection = $this->getEntityManager()->getConnection();
