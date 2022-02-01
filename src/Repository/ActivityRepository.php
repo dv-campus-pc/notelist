@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Activity\Activity;
-use App\Entity\Activity\VisitActivity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -22,20 +22,13 @@ class ActivityRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param int $itemsPerPage
-     * @param int $offset
-     *
-     * @return VisitActivity[]
+     * @return QueryBuilder
      */
-    public function getVisitActivityData(int $itemsPerPage = 10, int $offset = 0): array
+    public function selectVisitActivityData(): QueryBuilder
     {
         return $this->createQueryBuilder('activity')
             ->orderBy('activity.createdAt', 'DESC')
-            ->setMaxResults($itemsPerPage)
-            ->setFirstResult($offset)
-            ->where('activity INSTANCE OF App\Entity\Activity\VisitActivity')
-            ->getQuery()
-            ->getResult();
+            ->where('activity INSTANCE OF App\Entity\Activity\VisitActivity');
     }
 
     public function getNoteActivityData(UserInterface $user): array
