@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Activity\Activity;
+use App\Entity\Activity\VisitActivity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,12 +36,19 @@ class ActivityRepository extends ServiceEntityRepository
         return $result->fetchAllAssociative();
     }
 
+    /**
+     * @param int $itemsPerPage
+     * @param int $offset
+     *
+     * @return VisitActivity[]
+     */
     public function getVisitActivityDataQB(int $itemsPerPage = 10, int $offset = 0): array
     {
         return $this->createQueryBuilder('activity')
             ->orderBy('activity.createdAt', 'DESC')
             ->setMaxResults($itemsPerPage)
             ->setFirstResult($offset)
+            ->where('activity INSTANCE OF App\Entity\Activity\VisitActivity')
             ->getQuery()
             ->getResult();
     }
