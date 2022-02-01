@@ -27,7 +27,7 @@ class ActivityRepository extends ServiceEntityRepository
      *
      * @return VisitActivity[]
      */
-    public function getVisitActivityDataQB(int $itemsPerPage = 10, int $offset = 0): array
+    public function getVisitActivityData(int $itemsPerPage = 10, int $offset = 0): array
     {
         return $this->createQueryBuilder('activity')
             ->orderBy('activity.createdAt', 'DESC')
