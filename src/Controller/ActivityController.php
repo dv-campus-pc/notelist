@@ -44,7 +44,7 @@ class ActivityController extends AbstractController
 
     /**
      * @Route("/note", name="note")
-     * @IsGranted("ROLE_USER")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function note(EntityManagerInterface $em, Request $request): Response
     {
