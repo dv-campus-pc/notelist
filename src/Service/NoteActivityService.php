@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Activity\EditNoteActivity;
+use App\Entity\Category;
 use App\Entity\Note;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,7 +21,7 @@ class NoteActivityService
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function createNoteEditActivity(Note $note, array $changes)
+    public function createEditNoteActivity(Note $note, array $changes)
     {
         $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
 
@@ -28,9 +29,39 @@ class NoteActivityService
             throw new HttpException(400, 'User not exists in request');
         }
 
-        $activity = new EditNoteActivity($user, $note, $changes);
+        $activity = new EditNoteActivity($user, $note, $this->prepareChanges($changes));
 
         $this->em->persist($activity);
         $this->em->flush();
     }
+
+    private function prepareChanges(array $changes): array
+    {
+        $result = [];
+        foreach ($changes as $key => $itemChanges) {
+            if ($key === 'category') {
+                $result[$key] = $this->prepareCategory($itemChanges);
+                continue;
+            }
+
+            $result[$key] = $itemChanges;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Category[] $categories
+     * @return array
+     */
+    private function prepareCategory(array $categories): array
+    {
+        $result = [];
+        foreach ($categories as $category) {
+            $result[] = $category->getId();
+        }
+
+        return $result;
+    }
+
 }
