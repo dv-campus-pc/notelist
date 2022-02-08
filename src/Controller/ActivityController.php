@@ -51,7 +51,7 @@ class ActivityController extends AbstractController
         $data = $this->paginationService->paginator(
             $em->getRepository(Activity::class)->selectNoteActivityData($this->getUser()),
             $request,
-            2
+            10
         );
 
         return $this->render('activity/note.html.twig', [
