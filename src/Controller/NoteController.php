@@ -24,6 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class NoteController extends AbstractController
 {
+    const PAGE_LIMIT = 5;
+
     private PaginationService $paginationService;
 
     public function __construct(PaginationService $paginationService)
@@ -38,7 +40,8 @@ class NoteController extends AbstractController
     {
         $data = $this->paginationService->paginator(
             $em->getRepository(Note::class)->selectByUser($this->getUser()),
-            $request
+            $request,
+            self::PAGE_LIMIT
         );
 
         return $this->render('notelist/list.html.twig', [
@@ -57,7 +60,7 @@ class NoteController extends AbstractController
         $data = $this->paginationService->paginator(
             $em->getRepository(Note::class)->selectByCategoryAndUser($category, $this->getUser()),
             $request,
-            2
+            self::PAGE_LIMIT
         );
         return $this->render('notelist/list.html.twig', [
             'notes' => $data,
