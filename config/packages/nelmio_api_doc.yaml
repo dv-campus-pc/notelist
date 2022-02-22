@@ -1,0 +1,49 @@
+nelmio_api_doc:
+  documentation:
+    info:
+      title: DV Campus Notelist
+      description: You notes can stored here
+      version: 0.1.0
+    paths:
+      /api/login_check:
+        post:
+          description: User Authentication
+          tags:
+            - Authentication
+          produces:
+            - application/json
+          parameters:
+            - name: Credentials
+              description: User credentials
+              required: true
+              in: body
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+          responses:
+            '200':
+              description: Success login
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+            '401':
+              description: Invalid credentials
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+
+  areas: # to filter documented areas
+    path_patterns:
+      - ^/api(?!/doc$)
+    host_patterns:
+      - ^api\.
