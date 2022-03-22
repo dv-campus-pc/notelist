@@ -4,6 +4,14 @@ nelmio_api_doc:
       title: DV Campus Notelist
       description: You notes can stored here
       version: 0.1.0
+    securityDefinitions:
+      Bearer:
+        type: apiKey
+        description: 'Value: Bearer {token}'
+        name: Authorization
+        in: header
+    security:
+      - Bearer: []
     paths:
       /api/login_check:
         post:
@@ -12,6 +20,7 @@ nelmio_api_doc:
             - Authentication
           produces:
             - application/json
+          security: []
           parameters:
             - name: Credentials
               description: User credentials
@@ -44,6 +53,7 @@ nelmio_api_doc:
       /api/user/registration:
         post:
           description: User Registration
+          security: []
           tags:
             - Authentication
           produces:
@@ -81,7 +91,36 @@ nelmio_api_doc:
                 properties:
                   error:
                     type: string
-
+      /api/user/list:
+        get:
+          description: User List
+          tags:
+            - User
+          produces:
+            - application/json
+          responses:
+            '200':
+              description: List of users
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    role:
+                      type: array
+                      items:
+                        type: string
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
 
   areas: # to filter documented areas
     path_patterns:
