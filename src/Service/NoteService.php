@@ -6,8 +6,8 @@ namespace App\Service;
 
 use App\Entity\Category;
 use App\Entity\Note;
+use App\Exception\ValidationException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -37,7 +37,7 @@ class NoteService
         /** @var ConstraintViolationList $errors */
         $errors = $this->validator->validate($note);
         foreach ($errors as $error) {
-            throw new HttpException(400, $error->getMessage());
+            throw new ValidationException($error->getMessage());
         }
 
         $this->em->persist($note);
@@ -58,7 +58,7 @@ class NoteService
         /** @var ConstraintViolationList $errors */
         $errors = $this->validator->validate($note);
         foreach ($errors as $error) {
-            throw new HttpException(400, $error->getMessage());
+            throw new ValidationException($error->getMessage());
         }
 
         $this->em->persist($note);

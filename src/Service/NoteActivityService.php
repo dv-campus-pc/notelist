@@ -6,8 +6,8 @@ use App\Entity\Activity\EditNoteActivity;
 use App\Entity\Category;
 use App\Entity\Note;
 use App\Entity\User;
+use App\Exception\ValidationException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class NoteActivityService
@@ -26,7 +26,7 @@ class NoteActivityService
         $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
 
         if (!$user instanceof User) {
-            throw new HttpException(400, 'User not exists in request');
+            throw new ValidationException('User not exists in request');
         }
 
         $activity = new EditNoteActivity($user, $note, $this->prepareChanges($changes));

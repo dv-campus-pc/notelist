@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\User;
+use App\Exception\ValidationException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -65,7 +65,7 @@ class UserService
         ]);
         if ($passwordErrors->count()) {
             foreach ($passwordErrors as $error) {
-                throw new HttpException(400, $error->getMessage());
+                throw new ValidationException($error->getMessage());
             }
         }
     }
@@ -74,7 +74,7 @@ class UserService
     {
         $userErrors = $this->validator->validate($user);
         foreach ($userErrors as $error) {
-            throw new HttpException(400, $error->getMessage());
+            throw new ValidationException($error->getMessage());
         }
     }
 
