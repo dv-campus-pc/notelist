@@ -28,11 +28,13 @@ class UserService
         $this->em = $em;
     }
 
-    public function createAndFlush(string $plainPassword, string $username): void
+    public function createAndFlush(string $plainPassword, string $username): User
     {
         $user = $this->create($plainPassword, $username);
         $this->em->persist($user);
         $this->em->flush();
+
+        return $user;
     }
 
     public function create(string $plainPassword, string $username): User

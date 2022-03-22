@@ -41,6 +41,49 @@ nelmio_api_doc:
                     type: integer
                   message:
                     type: string
+      /api/user/registration:
+        post:
+          description: User Registration
+          tags:
+            - Authentication
+          produces:
+            - application/json
+          parameters:
+            - name: User details
+              description: User credentials
+              required: true
+              in: body
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+          responses:
+            '200':
+              description: Success registration
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                  role:
+                    type: array
+                    items:
+                      type: string
+#            '400':
+#              description: Invalid data
+#              schema:
+#                type: object
+#                properties:
+#                  code:
+#                    type: integer
+#                  message:
+#                    type: string
+
 
   areas: # to filter documented areas
     path_patterns:
