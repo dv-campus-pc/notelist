@@ -23,7 +23,7 @@ class CategoryService
         $this->em = $em;
     }
 
-    public function createAndFlush(string $name): void
+    public function createAndFlush(string $name): Category
     {
         $category = new Category($name);
 
@@ -35,5 +35,7 @@ class CategoryService
 
         $this->em->persist($category);
         $this->em->flush();
+
+        return $category;
     }
 }

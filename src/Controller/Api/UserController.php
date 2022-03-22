@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractApiController
 {
     /**
-     * @Route("/registration", name="registration", methods={"POST"})
+     * @Route(name="registration", methods={"POST"})
      *
      * @IsGranted("IS_ANONYMOUS_USER")
      */
@@ -34,7 +34,7 @@ class UserController extends AbstractApiController
     }
 
     /**
-     * @Route("/list", name="list", methods={"GET"})
+     * @Route(name="list", methods={"GET"})
      *
      * @IsGranted("ROLE_ADMIN")
      */

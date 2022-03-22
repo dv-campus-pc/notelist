@@ -7,7 +7,7 @@ namespace App\Controller\Api;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class AbstractApiController extends AbstractController
+abstract class AbstractApiController extends AbstractController
 {
     protected SerializerInterface $serializer;
 
