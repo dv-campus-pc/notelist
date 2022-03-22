@@ -74,15 +74,13 @@ nelmio_api_doc:
                     type: array
                     items:
                       type: string
-#            '400':
-#              description: Invalid data
-#              schema:
-#                type: object
-#                properties:
-#                  code:
-#                    type: integer
-#                  message:
-#                    type: string
+            '400':
+              description: Invalid data
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
 
 
   areas: # to filter documented areas
