@@ -24,7 +24,7 @@ class UserController extends AbstractController
      *
      * @IsGranted("ROLE_ADMIN")
      */
-    public function list(Request $request, UserService $userService): Response {
+    public function list(UserService $userService): Response {
         $users = $userService->getUserList();
 
         return $this->render('user/list.html.twig', [
