@@ -77,8 +77,10 @@ nelmio_api_doc:
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
         get:
           description: User List
           tags:
@@ -106,8 +108,10 @@ nelmio_api_doc:
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
       /api/category:
         post:
           description: Creating of category
@@ -140,15 +144,19 @@ nelmio_api_doc:
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
             '401':
               description: Access denied
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
         get:
           description: Get categories
           tags:
@@ -172,15 +180,19 @@ nelmio_api_doc:
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
             '401':
               description: Access denied
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
       /api/category/{id}:
         delete:
           description: Delete category
@@ -201,12 +213,88 @@ nelmio_api_doc:
               schema:
                 type: object
                 properties:
-                  error:
-                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
             '404':
               description: Category not found
               schema:
                 type: object
                 properties:
-                  error:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+      /api/note:
+        post:
+          description: Create note
+          tags:
+            - Note
+          produces:
+            - application/json
+          parameters:
+            - name: Note details
+              description: Note entity
+              required: true
+              in: body
+              schema:
+                type: object
+                properties:
+                  title:
                     type: string
+                  text:
+                    type: string
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+          responses:
+            '200':
+              description: Note was created
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  text:
+                    type: string
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      title:
+                        type: string
+                  owner:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      username:
+                        type: string
+                      roles:
+                        type: array
+                        items:
+                          type: string
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+            '400':
+              description: Bad request
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
