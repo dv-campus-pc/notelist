@@ -193,35 +193,35 @@ nelmio_api_doc:
                 properties:
                   error:
                     type: string
-#      /api/category/{id}:
-#        delete:
-#          description: Delete category
-#          tags:
-#            - Category
-#          produces:
-#            - application/json
-#          parameters:
-#            - name: Category id
-#              description: Id of category to delete
-#              required: true
-#              in: path
-#          responses:
-#            '200':
-#              description: Category was deleted
-#            '401':
-#              description: Access denied
-#              schema:
-#                type: object
-#                properties:
-#                  error:
-#                    type: string
-#            '404':
-#              description: Category not found
-#              schema:
-#                type: object
-#                properties:
-#                  error:
-#                    type: string
+      /api/category/{id}:
+        delete:
+          description: Delete category
+          tags:
+            - Category
+          produces:
+            - application/json
+          parameters:
+            - name: id
+              description: Id of category to delete
+              required: true
+              in: path
+          responses:
+            '200':
+              description: Category was deleted
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+            '404':
+              description: Category not found
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
 
   areas: # to filter documented areas
     path_patterns:
