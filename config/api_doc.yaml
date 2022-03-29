@@ -345,3 +345,36 @@ nelmio_api_doc:
                     type: array
                     items:
                       type: string
+      /api/note/{id}:
+        delete:
+          description: Delete note
+          tags:
+            - Note
+          produces:
+            - application/json
+          parameters:
+            - name: id
+              description: Id of note to delete
+              required: true
+              in: path
+          responses:
+            '200':
+              description: Note was deleted
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+            '404':
+              description: Note not found
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string

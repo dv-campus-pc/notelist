@@ -64,7 +64,7 @@ class HttpExceptionListener
         }
 
         if ($exception instanceof NotFoundHttpException) {
-            return [$exception->getMessage()];
+            return ['Entity not found in the database'];
         }
 
         if ($exception instanceof AccessDeniedHttpException) {
