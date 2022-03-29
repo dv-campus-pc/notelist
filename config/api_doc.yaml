@@ -1,0 +1,212 @@
+nelmio_api_doc:
+  documentation:
+    paths:
+      /api/login_check:
+        post:
+          description: User Authentication
+          tags:
+            - Authentication
+          produces:
+            - application/json
+          security: [ ]
+          parameters:
+            - name: Credentials
+              description: User credentials
+              required: true
+              in: body
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+          responses:
+            '200':
+              description: Success login
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+            '401':
+              description: Invalid credentials
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+      /api/user:
+        post:
+          description: User Registration
+          security: [ ]
+          tags:
+            - Authentication
+          produces:
+            - application/json
+          parameters:
+            - name: User details
+              description: User credentials
+              required: true
+              in: body
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+          responses:
+            '200':
+              description: Success registration
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                  role:
+                    type: array
+                    items:
+                      type: string
+            '400':
+              description: Invalid data
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        get:
+          description: User List
+          tags:
+            - User
+          produces:
+            - application/json
+          responses:
+            '200':
+              description: List of users
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
+                    role:
+                      type: array
+                      items:
+                        type: string
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      /api/category:
+        post:
+          description: Creating of category
+          tags:
+            - Category
+          produces:
+            - application/json
+          parameters:
+            - name: Category details
+              description: Category details
+              required: true
+              in: body
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+          responses:
+            '200':
+              description: Created category
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+            '400':
+              description: Bad request
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        get:
+          description: Get categories
+          tags:
+            - Category
+          produces:
+            - application/json
+          responses:
+            '200':
+              description: List of categories
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+            '400':
+              description: Bad request
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      /api/category/{id}:
+        delete:
+          description: Delete category
+          tags:
+            - Category
+          produces:
+            - application/json
+          parameters:
+            - name: id
+              description: Id of category to delete
+              required: true
+              in: path
+          responses:
+            '200':
+              description: Category was deleted
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+            '404':
+              description: Category not found
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
