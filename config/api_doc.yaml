@@ -298,3 +298,50 @@ nelmio_api_doc:
                     type: array
                     items:
                       type: string
+        get:
+          description: Get all notes
+          tags:
+            - Note
+          produces:
+            - application/json
+          responses:
+            '200':
+              description: All notes of current user
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    text:
+                      type: string
+                    category:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        title:
+                          type: string
+                    owner:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        username:
+                          type: string
+                        roles:
+                          type: array
+                          items:
+                            type: string
+            '401':
+              description: Access denied
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
