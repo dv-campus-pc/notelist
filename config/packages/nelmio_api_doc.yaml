@@ -223,8 +223,6 @@ nelmio_api_doc:
                   error:
                     type: string
 
-  areas: # to filter documented areas
+  routes:
     path_patterns:
-      - ^/api(?!/doc$)
-    host_patterns:
-      - ^api\.
+      - ^/api(?!/doc)
