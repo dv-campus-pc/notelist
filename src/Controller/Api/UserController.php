@@ -29,7 +29,7 @@ class UserController extends AbstractApiController
         );
 
         return new Response($this->serializer->serialize($user, 'json', [
-            'groups' => ['API']
+            'groups' => ['API_GET']
         ]));
     }
 
@@ -42,7 +42,7 @@ class UserController extends AbstractApiController
         $users = $userService->getUserList();
 
         return new ApiResponse($this->serializer->serialize($users, 'json', [
-            'groups' => ['API'],
+            'groups' => ['API_GET'],
         ]));
     }
 }

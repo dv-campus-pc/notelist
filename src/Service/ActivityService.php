@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Activity\VisitActivity;
 use App\Entity\User;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,9 +12,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ActivityService
 {
-    private EntityManagerInterface $em;
+    private EntityManager $em;
     private TokenStorageInterface $tokenStorage;
 
+    /**
+     * @param EntityManager $em
+     */
     public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
     {
         $this->em = $em;
@@ -33,6 +37,6 @@ class ActivityService
         );
 
         $this->em->persist($activity);
-        $this->em->flush();
+        $this->em->flush($activity);
     }
 }

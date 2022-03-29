@@ -8,7 +8,6 @@ use App\Entity\Category;
 use App\Entity\Note;
 use App\Enum\FlashMessagesEnum;
 use App\Form\NoteType;
-use App\Service\NoteService;
 use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -129,7 +128,6 @@ class NoteController extends AbstractController
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($note);
             $em->flush();
             $this->addFlash(FlashMessagesEnum::SUCCESS, sprintf('Note "%s" was successfully changed', $note->getTitle()));
 
