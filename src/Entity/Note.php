@@ -10,8 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use LogicException;
 
 /**
  * @ORM\Entity(repositoryClass=NoteRepository::class)
@@ -22,6 +22,8 @@ class Note implements Ownable
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @Groups("API_GET")
      */
     private ?int $id = null;
 
@@ -35,6 +37,8 @@ class Note implements Ownable
      * )
      *
      * @ORM\Column(type="string", length=100)
+     *
+     * @Groups({"API_GET", "API_UPDATE"})
      */
     private string $title;
 
@@ -48,12 +52,16 @@ class Note implements Ownable
      * )
      *
      * @ORM\Column(type="text")
+     *
+     * @Groups({"API_GET", "API_UPDATE"})
      */
     private string $text;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="notes")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups("API_GET")
      */
     private Category $category;
 
@@ -66,6 +74,8 @@ class Note implements Ownable
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups("API_GET")
      */
     private UserInterface $owner;
 

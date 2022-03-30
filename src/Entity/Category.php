@@ -23,7 +23,7 @@ class Category implements Ownable
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      *
-     * @Groups("API")
+     * @Groups("API_GET")
      */
     private ?int $id = null;
 
@@ -38,7 +38,7 @@ class Category implements Ownable
      *
      * @ORM\Column(type="string", length=255)
      *
-     * @Groups("API")
+     * @Groups("API_GET")
      */
     private string $title;
 

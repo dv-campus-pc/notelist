@@ -3,12 +3,21 @@
 namespace App\Exception;
 
 use Exception;
-use Throwable;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class ValidationException extends Exception
 {
-    public function __construct($message = "", $code = 400, Throwable $previous = null)
+    private ?ConstraintViolationList $errorsList;
+
+    public function __construct(string $message = "", ConstraintViolationList $errorsList = null)
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, Response::HTTP_BAD_REQUEST);
+        $this->errorsList = $errorsList;
+    }
+
+    public function getErrorsList(): ?ConstraintViolationList
+    {
+        return $this->errorsList;
     }
 }

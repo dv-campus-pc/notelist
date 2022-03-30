@@ -30,7 +30,7 @@ class CategoryController extends AbstractApiController
         $category = $categoryService->createAndFlush($categoryName);
 
         return new ApiResponse($this->serializer->serialize($category, 'json', [
-            'groups' => ['API']
+            'groups' => ['API_GET']
         ]));
     }
 
@@ -44,7 +44,7 @@ class CategoryController extends AbstractApiController
         ]);
 
         return new ApiResponse($this->serializer->serialize($categories, 'json', [
-            'groups' => ['API']
+            'groups' => ['API_GET']
         ]));
     }
 
