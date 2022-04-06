@@ -34,11 +34,11 @@ class HttpExceptionListener
         }
 
         $session = $request->getSession();
+        // TODO: implement refererUrl using relative path
         if (!$refererUrl = $request->headers->get('referer')) {
             $refererUrl = '/';
         }
         $response = new RedirectResponse($refererUrl);
-        $response->setStatusCode($exception->getCode());
 
         foreach ($exception->getErrorsList() as $error) {
             $session->getFlashBag()->add(FlashMessagesEnum::FAIL, $error->getMessage());
